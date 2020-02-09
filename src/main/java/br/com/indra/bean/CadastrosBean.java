@@ -9,8 +9,6 @@ import javax.faces.bean.SessionScoped;
 import br.com.indra.DAO.CadastroDAO;
 import br.com.indra.entity.Cadastros;
 
-
-
 @ManagedBean(name="CadastrosBean")
 @SessionScoped
 public class CadastrosBean {
