@@ -11,9 +11,9 @@ public class RobotApplication {
 		System.setProperty("webdriver.ie.driver", "C:\\bot_acr_cef\\browsers\\IEDriverServer.exe");
 		ProcessamentoCallId p = new ProcessamentoCallId();
 		//p.processa(Integer.valueOf(args[0]), Integer.valueOf(args[1]));
-		p.processa(10, 1099);
+		p.processa(100, 500);
 		
-	}
+	}	
 			
 	
 }	

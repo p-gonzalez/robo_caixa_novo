@@ -4,52 +4,46 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 public class Conexoes {
+
 	private static Connection conexao;
-	//private static final String URL_CONEXAO = "jdbc:mysql://10.209.8.21/admrobot?useTimezone=true&serverTimezone=UTC";
-	//private static final String URL_CONEXAO = "jdbc:mysql://10.209.41.28/admrobot?useTimezone=true&serverTimezone=UTC";
-	//private static final String URL_CONEXAO = "jdbc:mysql://localhost/admrobot?useTimezone=true&serverTimezone=UTC";
-	private static final String URL_CONEXAO = "jdbc:mysql://10.209.49.61/db_robo_acr";
-	//private static final String URL_CONEXAO = "jdbc:mysql://10.209.49.61/db_robo_acr?useTimezone=true&serverTimezone=UTC";
-	
-	// base servidor - produ��o
-	//private static final String USUARIO = "root";
-	//private static final String SENHA = "!ndr@DBbp0#2019";
-	
-	//apontamento para servidor 10.209.49.61
-	private static final String USUARIO = "admrobo";
-	private static final String SENHA = "!ndr@DBbp0#2019";
-	
-	//base local
-	//private static final String USUARIO = "root";
-	//private static final String SENHA = "!ndr@DBbp0#2019";
+	public static final Logger logger = LogManager.getLogger(ConexaoOld.class.getName());
+	//private static final String URL_CONEXAO = "jdbc:sqlserver://BPOPRDSPODBS01;instanceName=PRODUCAO;databaseName=BD_ATF";
+	//private static final String URL_CONEXAO = "jdbc:sqlserver://10.209.8.77;instanceName=BPOPRDSPOAPS50;databaseName=BD_ROBO_GRV_CAIXA";
+	private static final String URL_CONEXAO = "jdbc:sqlserver://10.209.8.77;databaseName=BD_ROBO_GRV_CAIXA";
+	/*private static final String USUARIO = "svc1_sql";
+	private static final String SENHA = "I@1!qdBle5ing";
+	*/
+	private static final String USUARIO = "srv_rb_cx";
+	private static final String SENHA = "!ndr@RoC@2020";
 
 	public static Connection getConexao() {
 		if (conexao == null) {
-			try {
+			
 				try {
-					Class.forName("com.mysql.jdbc.Driver");
+					logger.info("Classe: ConexaoSqlServer, Método: getConexaoSqlServer, Mensagem: Abrindo conexão com o Banco de dados....");
 					conexao = DriverManager.getConnection(URL_CONEXAO, USUARIO, SENHA);
-				} catch (ClassNotFoundException e) {
-
-					e.printStackTrace();
+					logger.info("Classe: ConexaoSqlServer, Método: getConexaoSqlServer, Mensagem: Banco de dados Conectado !");
+				} catch (Exception e) {
+					logger.error("Classe: ConexaoSqlServer, Método: getConexaoSqlServer, Error: "+e);
 				}
-
-			} catch (SQLException e) {
-				
-				e.printStackTrace();
-			}
 
 		}
 		return conexao;
 	}
+	
 public static void fecharConexao(){
 	if(conexao != null){
 		try {
+			logger.info("Classe: ConexaoSqlServer, Método: fecharConexao, Mensagem: Encerrando conexão com o Banco....");
 			conexao.close();
 			conexao = null;
+			logger.info("Classe: ConexaoSqlServer, Método: fecharConexao, Mensagem: Conexão fechada ! ");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("Classe: ConexaoSqlServer, Método: fecharConexao, Error: "+e);
 		}
 		
 	}

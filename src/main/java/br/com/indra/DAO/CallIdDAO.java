@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.indra.connections.Conexoes;
+import br.com.indra.connections.ConexaoOld;
 import br.com.indra.entity.CallId;
 
 public class CallIdDAO {
@@ -14,9 +14,10 @@ public class CallIdDAO {
 
 	public String buscarListaDeCallCpfCnpj(int id) {
 		try {
-			Connection conexao = Conexoes.getConexao();
+			Connection conexao = ConexaoOld.getConexao();
 			PreparedStatement ps = conexao
-					.prepareStatement("SELECT callid FROM tb_dados_cadastrais_20190801 WHERE id=? ");
+					.prepareStatement("SELECT * FROM tb_dados_cadastrais WHERE callid IN ("+id+") and cod_dado = 2 and cod_fonte = 2");
+					//.prepareStatement("SELECT callid FROM tb_dados_cadastrais WHERE id=? ");
 			ps.setInt(1, id);
 			ResultSet resultSet = ps.executeQuery();
 
@@ -41,8 +42,10 @@ public class CallIdDAO {
 
 	public String buscarListaDeCallId(int id) {
 		try {
-			Connection conexao = Conexoes.getConexao();
-			PreparedStatement ps = conexao.prepareStatement("SELECT call_id FROM tb_call_id WHERE id = ? ");
+			Connection conexao = ConexaoOld.getConexao();
+			PreparedStatement ps = conexao.prepareStatement("SELECT callid FROM tb_dados_cadastrais WHERE id = ? ");
+			//PreparedStatement ps = conexao.prepareStatement("SELECT call_id FROM call_id WHERE id 	= ? ");
+			//PreparedStatement ps = conexao.prepareStatement("SELECT * FROM tb_dados_cadastrais WHERE callid IN ("+id+") and cod_dado = 2 and cod_fonte = 2");
 			ps.setInt(1, id);
 			ResultSet resultSet = ps.executeQuery();
 
@@ -50,7 +53,8 @@ public class CallIdDAO {
 
 			while (resultSet.next()) {
 
-				callId = resultSet.getString("call_Id");
+				//callId = resultSet.getString("call_Id");
+				callId = resultSet.getString("callid");
 
 			}
 
@@ -65,12 +69,12 @@ public class CallIdDAO {
 
 	}
 
-	public void atualizarStatus(int id, int status) {
+	public void atualizarStatus(int id, String status) {
 		try {
-			Connection conexao = Conexoes.getConexao();
-			PreparedStatement ps = conexao.prepareStatement("UPDATE tb_call_id SET status=? WHERE id = ? ");
+			Connection conexao = ConexaoOld.getConexao();
+			PreparedStatement ps = conexao.prepareStatement("UPDATE tb_log_gravacoes SET status=? WHERE id = ? ");
 			ps.setInt(1, id);
-			ps.setInt(2, status);
+			ps.setString(2, status);
 			boolean execute = ps.execute();
 			if (!execute) {
 				System.out.println("Erro ao executar update id " + id);
@@ -86,8 +90,8 @@ public class CallIdDAO {
 
 	public void atualizarStatus(int id) {
 		try {
-			Connection conexao = Conexoes.getConexao();
-			PreparedStatement ps = conexao.prepareStatement("UPDATE tb_call_id SET status=1 WHERE id = ? ");
+			Connection conexao = ConexaoOld.getConexao();
+			PreparedStatement ps = conexao.prepareStatement("UPDATE tb_log_gravacoes SET status=1 WHERE id = ? ");
 			ps.setInt(1, id);
 
 			boolean execute = ps.execute();
@@ -103,54 +107,14 @@ public class CallIdDAO {
 
 	}
 
-	/*
-	 * public String buscarCallidPeriodo(String dInicio, String dFim){ try{
-	 * Connection conexao = Conexoes.getConexao(); PreparedStatement ps =
-	 * conexao.
-	 * prepareStatement("SELECT * FROM tb_call_id WHERE data_hora BETWEEN ? AND ? "
-	 * ); ps.setString(1, dInicio); ResultSet resultSet = ps.executeQuery();
-	 * String callId = null;
-	 * 
-	 * while(resultSet.next()){ callId = resultSet.getString("call_id"); }
-	 * return callId;
-	 * 
-	 * }catch(Exception e ){
-	 * 
-	 * System.out.println(e); } return dFim;
-	 * 
-	 * 
-	 * }
-	 */
-	/*
-	 * public void buscarListaDeCallId() { try {
-	 * 
-	 * List<String>callId = new ArrayList<>(); int coluna = 1; String ps =
-	 * "SELECT call_id FROM tb_call_id WHERE id = ? "; try{ ps =
-	 * conexao.prepareStatement (ps); ResultSet resultSet = ps.executeQuery();
-	 * 
-	 * while (resultSet.next()) {
-	 * 
-	 * //callId = resultSet.getString("call_Id");
-	 * 
-	 * callId.add(ps.)
-	 * 
-	 * }
-	 * 
-	 * return callId;
-	 * 
-	 * } catch (Exception e) {
-	 * 
-	 * System.out.println(e);
-	 * 
-	 * } return null;
-	 * 
-	 * }
-	 */
+	
 
 	public String buscarListaDeCallIdCadastro(int id) {
 		try {
-			Connection conexao = Conexoes.getConexao();
-			PreparedStatement ps = conexao.prepareStatement("SELECT id_chamado FROM cadastros WHERE id = ? ");
+			Connection conexao = ConexaoOld.getConexao();
+			//PreparedStatement ps = conexao.prepareStatement("SELECT id_chamado FROM cadastros WHERE id = ? ");
+			PreparedStatement ps = conexao.prepareStatement("SELECT id FROM tb_dados_cadastrais WHERE id = ? ");
+			//PreparedStatement ps = conexao.prepareStatement("SELECT * FROM tb_dados_cadastrais WHERE callid IN ("+id+") and cod_dado = 2 and cod_fonte = 2 ");
 			ps.setInt(1, id);
 			ResultSet resultSet = ps.executeQuery();
 
@@ -175,7 +139,7 @@ public class CallIdDAO {
 
 	public String buscarCpfCnpjCadastros(int id) {
 		try {
-			Connection conexao = Conexoes.getConexao();
+			Connection conexao = ConexaoOld.getConexao();
 			PreparedStatement ps = conexao.prepareStatement("SELECT cpf_cnpj FROM cadastros WHERE id = ?");
 			ps.setInt(1, id);
 			ResultSet resultSet = ps.executeQuery();
@@ -224,6 +188,7 @@ public class CallIdDAO {
 
 		String aa = c.buscarListaDeCallCpfCnpj(20);
 		String bb = c.buscarListaDeCallIdCadastro(20);
+		
 		for (int ca = 0; ca < 8; ca++) {
 
 			 System.out.println(c.buscarListaDeCallCpfCnpj(ca++));

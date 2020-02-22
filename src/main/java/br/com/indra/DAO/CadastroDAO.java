@@ -9,7 +9,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import br.com.indra.connections.Conexoes;
+import br.com.indra.connections.ConexaoOld;
+import br.com.indra.connections.ConexaoOld;
 import br.com.indra.entity.Cadastros;
 
 
@@ -20,10 +21,10 @@ public class CadastroDAO {
 
 		try {
 
-			Connection conexao = Conexoes.getConexao();
+			Connection conexao = ConexaoOld.getConexao();
 
 			PreparedStatement ps = conexao.prepareCall(
-					"INSERT INTO  cadastros(duracao_1,duracao_total,habilidades,call_id,inicio_contato,interlocutores,proprietario,servico,udf,id_chamado,DataHoraProcessamento,cpf_cnpj,num_chamador, id_operador,id_contratada, status, num_tel, nome_titular,nome_arquivo,dt_atendimento,tempo_atend,tempo_atendimento ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+					"INSERT INTO  tb_log_gravacoes(duracao_1,duracao_total,habilidades,call_id,inicio_contato,interlocutores,proprietario,servico,udf,id_chamado,DataHoraProcessamento,cpf_cnpj,num_chamador, id_operador,id_contratada, status, num_tel, nome_titular,nome_arquivo,dt_atendimento,tempo_atend,tempo_atendimento ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			ps.setString(1, cadastro.getDuracao1());
 			ps.setString(2, cadastro.getDuracaoTotal());
 			ps.setString(3, cadastro.getHabilidades());
@@ -62,6 +63,8 @@ public class CadastroDAO {
 			System.out.println("Enserido com sucesso");
 		} catch (Exception e) {
 			System.out.println(e);
+			System.out.println("Não foi possivel inserir na base");
+			
 
 		}
 
@@ -70,8 +73,8 @@ public class CadastroDAO {
 	public void salvar_call_id(Cadastros cadastro) {
 
 		try {
-			Connection conexao = Conexoes.getConexao();
-			PreparedStatement call = conexao.prepareCall("INSERT INTO cadastros(call_id)values('6')");
+			Connection conexao = ConexaoOld.getConexao();
+			PreparedStatement call = conexao.prepareCall("INSERT INTO tb_log_gravacoes(call_id)values('6')");
 			call.setString(1, cadastro.getCallId());
 			call.executeUpdate();
 			System.out.println("Enserido com sucesso");
@@ -86,8 +89,8 @@ public class CadastroDAO {
 	public List<Cadastros> buscar() {
 
 		try {
-			Connection conexao = Conexoes.getConexao();
-			PreparedStatement ps = conexao.prepareStatement("SELECT * FROM cadastros");
+			Connection conexao = ConexaoOld.getConexao();
+			PreparedStatement ps = conexao.prepareStatement("SELECT * FROM tb_log_gravacoes");
 			ResultSet resultSet = ps.executeQuery();
 			List<Cadastros> cadastros = new ArrayList<Cadastros>();
 			while (resultSet.next()) {
@@ -120,8 +123,8 @@ public class CadastroDAO {
 	public Date buscarUltimoProcessamento() {
 
 		try {
-			Connection conexao = Conexoes.getConexao();
-			PreparedStatement ps = conexao.prepareStatement("SELECT MAX(cad.dataHoraProcessamento) FROM cadastros cad");
+			Connection conexao = ConexaoOld.getConexao();
+			PreparedStatement ps = conexao.prepareStatement("SELECT MAX(cad.dataHoraProcessamento) FROM tb_log_gravacoes cad");
 			ResultSet resultSet = ps.executeQuery();
 			List<Cadastros> cadastros = new ArrayList<Cadastros>();
 			while (resultSet.next()) {
@@ -142,8 +145,8 @@ public class CadastroDAO {
 	public List<Cadastros> renomearArq(){
 
 		try {
-			Connection conexao = Conexoes.getConexao();
-			PreparedStatement ps = conexao.prepareStatement("SELECT call_id  FROM cadastros");
+			Connection conexao = ConexaoOld.getConexao();
+			PreparedStatement ps = conexao.prepareStatement("SELECT call_id  FROM tb_log_gravacoes");
 			ResultSet resultSet = ps.executeQuery();
 			List<Cadastros> cadastros = new ArrayList<Cadastros>();
 			while (resultSet.next()) {
@@ -160,8 +163,8 @@ public class CadastroDAO {
 	
 	public void atualizarNomeArquivo(String nomeArquivo, Cadastros cadastro){
 		try {
-			Connection conexao = Conexoes.getConexao();
-			PreparedStatement ps = conexao.prepareStatement("UPDATE cadastros SET nome_arquivo = ?  WHERE id_chamado = ? ");
+			Connection conexao = ConexaoOld.getConexao();
+			PreparedStatement ps = conexao.prepareStatement("UPDATE tb_log_gravacoes SET nome_arquivo = ?  WHERE id_chamado = ? ");
 			ps.setString(1, nomeArquivo);
 			ps.setString(2, cadastro.getIdChamado());
 			boolean execute = ps.execute();
@@ -180,8 +183,8 @@ public class CadastroDAO {
 	
 	public List<Cadastros>call_id() throws SQLException{
 		Cadastros call = null;
-		Connection conexao = Conexoes.getConexao();
-		PreparedStatement ps = conexao.prepareStatement("SELECT * FROM cadastros WHERE call_id=? ");
+		Connection conexao = ConexaoOld.getConexao();
+		PreparedStatement ps = conexao.prepareStatement("SELECT * FROM tb_log_gravacoes WHERE call_id=? ");
 		ResultSet resultSet = ps.executeQuery();
 		
 		List<Cadastros> cadastros = new ArrayList<Cadastros>();
@@ -197,8 +200,8 @@ public class CadastroDAO {
 	
 public int numeroLigacoes() throws SQLException{
 		
-		Connection conexao = Conexoes.getConexao();
-		PreparedStatement ps = conexao.prepareStatement("SELECT COUNT(call_id) AS valor FROM cadastros");
+		Connection conexao = ConexaoOld.getConexao();
+		PreparedStatement ps = conexao.prepareStatement("SELECT COUNT(call_id) AS valor FROM tb_log_gravacoes");
 		ResultSet resultSet = ps.executeQuery();
 		int tot = 0;
 		while(resultSet.next()) {
@@ -211,9 +214,11 @@ public int numeroLigacoes() throws SQLException{
 	}
 	
 	public static void main(String[] args) {
-		
-		System.out.println(java.util.Calendar.getInstance().getTimeInMillis());
+				
+		/*System.out.println(java.util.Calendar.getInstance().getTimeInMillis());
 		System.out.println(java.util.Calendar.getInstance());
-		System.out.println(new java.sql.Timestamp(java.util.Calendar.getInstance().getTimeInMillis()));
+		System.out.println(new java.sql.Timestamp(java.util.Calendar.getInstance().getTimeInMillis()));*/
+		
+		
 	}
 }

@@ -15,7 +15,7 @@ public class ProcessamentoCallId {
 	
 	private CallIdDAO callIdDAO;
 	private Robo robo;
-	
+		
 	public void processa(int quantInicial, int quantFinal) throws AWTException, ParseException, InterruptedException {
 		callIdDAO = new CallIdDAO();
 		robo = new Robo();
@@ -24,8 +24,8 @@ public class ProcessamentoCallId {
 			System.out.println("ligações " + i);
 			String callId = callIdDAO.buscarListaDeCallId(i);
 			robo.processoNavegacao(callId);
-			callIdDAO.atualizarStatus(i);
-		}
+			//callIdDAO.atualizarStatus(i);
+		}	
 
 	}
 

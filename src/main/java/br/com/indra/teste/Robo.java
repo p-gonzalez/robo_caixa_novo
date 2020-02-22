@@ -60,11 +60,11 @@ public class Robo {
 		}
 
 		SimpleDateFormat dataIni = new SimpleDateFormat("dd/MM/yyyy");
-		Date dataInicio = dataIni.parse("01/08/2019");
+		Date dataInicio = dataIni.parse("18/02/2020");
 		cad.setRecarregarData(dataInicio);
 
 		SimpleDateFormat dataF = new SimpleDateFormat("dd/MM/yyyy");
-		Date dataFinal = dataF.parse("01/08/2019");
+		Date dataFinal = dataF.parse("18/02/2020");
 		cad.setRecarregarData(dataFinal);
 
 		Calendar dtIni = Calendar.getInstance();
@@ -109,7 +109,7 @@ public class Robo {
 		// Thread.sleep(1000);
 		// }
 		//
-		
+
 		Select drp = new Select(driver.findElement(By.name("operator_udfs")));
 		drp.selectByVisibleText("Qualquer de");
 
@@ -118,6 +118,8 @@ public class Robo {
 
 		// inserção do call_id
 		driver.findElement(By.name("param1_udfs")).sendKeys(callId);
+
+		System.out.println(callId);
 
 		driver.findElement(By.className("buttonBlue")).click();
 		Thread.sleep(2000);
@@ -218,10 +220,9 @@ public class Robo {
 							Thread.sleep(1000);
 						}
 
-						 //exlusivo para o bot 1
-						//robot.keyPress(KeyEvent.VK_UP);
-						//Thread.sleep(1000);
-						
+						// exlusivo para o bot 1
+						// robot.keyPress(KeyEvent.VK_UP);
+						// Thread.sleep(1000);
 
 						robot.keyPress(KeyEvent.VK_ENTER);
 						Thread.sleep(1000);
@@ -299,12 +300,11 @@ public class Robo {
 						break;
 					case 7:
 						cadastros.setDuracaoTotal(coluna.getText());
-						
-						//cadastros.setTempoAtendimento(coluna.getText());
 
-						 cadastros.setTempoAtend(coluna.getText().replace(":",
-						","));
-						
+						// cadastros.setTempoAtendimento(coluna.getText());
+
+						cadastros.setTempoAtend(coluna.getText().replace(":", ","));
+
 						cadastros.setTempoAtend(UtilDate.convertMinutoEmSegundos(coluna.getText()));
 						break;
 					case 8:
@@ -317,7 +317,6 @@ public class Robo {
 						break;
 					}
 					col++;
-					
 
 				}
 
@@ -331,32 +330,13 @@ public class Robo {
 					System.out.println(UtilDate.convertToString(dataInicio, "dd/MM/yyyy"));
 
 					Thread.sleep(5000);
-					//EnderecoBot en = new EnderecoBot();
-					//NomeArqZ na = new NomeArqZ();
+					// EnderecoBot en = new EnderecoBot();
+					// NomeArqZ na = new NomeArqZ();
 
-					RenomearArq.renomearArquivo("C:\\ligacoes\\bot2",
-							getNomePadraoArquivo(cadastros), "c:\\ligacoesDefinitivas\\bot12");
-							//getNomePadraoArquivo(cadastros), "Z:\\2019\\Agosto\\01\\00-00");
-					
-					//RenomearArq.renomearArquivo(en.getBot03(), getNomePadraoArquivo(cadastros), na.getJan3());
-
-					// RenomearArq.renomearArquivo(en.getBot03(),
-					// getNomePadraoArquivo(cadastros),
-					// RenomearArq.getPath(cadastros.getInicioContato()));
-					//
-					// RenomearArq.renomearArquivo(en.getBot01(),
-					// getNomePadraoArquivo(cadastros),
-					// "Z:\\2019\\Abril\\01\\01-00");
-					//
+					RenomearArq.renomearArquivo("C:\\ligacoes\\bot2", getNomePadraoArquivo(cadastros),
+							"c:\\ligacoesDefinitivas\\2020\\02\\18");
+				
 					Thread.sleep(5000);
-
-					// String narq = getNomePadraoArquivo(cadastros);
-					// cadastros.setNomeArquivo("teste");
-					// System.out.println(narq);
-					// cadastros.setNomeArquivo(getNomePadraoArquivo(cadastros));
-
-					// cadastroDAO.atualizarNomeArquivo(getNomePadraoArquivo(cadastros),
-					// cadastros);
 
 				}
 
@@ -419,15 +399,8 @@ public class Robo {
 		}
 
 		nomePadrao.append(
-				/*
-				 * UtilDate.convertToDate(cadastros.getInicioContato(),
-				 * UtilDate.PATTERN_DD_MM_YY_HH_MM_SS),
-				 * UtilDate.PATTERN_YYYYMMDDHH_MMSS));
-				 */
-
+				
 				UtilDate.convertToString(cadastros.getInicioContato(), UtilDate.PATTERN_YYYYMMDDHH_MMSS));
-
-		// nomePadrao.append(cadastros.getDuracao_total().replace(":", ""));
 
 		if (cadastros.getProprietario() == null || cadastros.getProprietario().isEmpty()) {
 			nomePadrao.append("00000000");
